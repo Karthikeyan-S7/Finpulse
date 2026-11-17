@@ -55,6 +55,7 @@ export function Accounts() {
   const [accounts, setAccounts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showArchived, setShowArchived] = useState(false);
+  const [selectedTypeFilter, setSelectedTypeFilter] = useState('ALL');
 
   // Modals
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -136,6 +137,12 @@ export function Accounts() {
     });
     return groups;
   }, [activeAccounts]);
+
+  // Filter active accounts by selected type for side-by-side display
+  const filteredAccounts = useMemo(() => {
+    if (selectedTypeFilter === 'ALL') return activeAccounts;
+    return activeAccounts.filter((a) => a.accountType === selectedTypeFilter);
+  }, [activeAccounts, selectedTypeFilter]);
 
   // Add / Edit Account submission
   const handleSaveAccount = async (e) => {
@@ -362,111 +369,145 @@ export function Accounts() {
           }
         />
       ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
-          {Object.keys(groupedAccounts).map((type) => {
-            const accList = groupedAccounts[type];
-            const meta = TYPE_METADATA[type] || { label: type, badge: 'neutral', icon: 'Accounts' };
+        <div style={{ marginBottom: 'var(--space-6)' }}>
+          {/* Header & Filter Pills */}
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: 'var(--space-3)',
+              marginBottom: 'var(--space-4)',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+              <h3 style={{ fontSize: 'var(--font-lg)', fontWeight: 600 }}>Active Accounts</h3>
+              <Badge variant="neutral">{activeAccounts.length}</Badge>
+            </div>
 
-            return (
-              <div key={type}>
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    marginBottom: 'var(--space-3)',
-                  }}
-                >
-                  <Icon name={meta.icon} size={18} />
-                  <h3 style={{ fontSize: 'var(--font-md)', fontWeight: 600 }}>{meta.label}</h3>
-                  <Badge variant={meta.badge}>{accList.length}</Badge>
-                </div>
+            {/* Type Filter Pills */}
+            <div style={{ display: 'flex', gap: 'var(--space-2)', flexWrap: 'wrap' }}>
+              <Button
+                variant={selectedTypeFilter === 'ALL' ? 'primary' : 'outline'}
+                size="sm"
+                onClick={() => setSelectedTypeFilter('ALL')}
+              >
+                All ({activeAccounts.length})
+              </Button>
+              {Object.keys(groupedAccounts).map((type) => {
+                const meta = TYPE_METADATA[type] || { label: type };
+                const count = groupedAccounts[type].length;
+                return (
+                  <Button
+                    key={type}
+                    variant={selectedTypeFilter === type ? 'primary' : 'outline'}
+                    size="sm"
+                    onClick={() => setSelectedTypeFilter(type)}
+                  >
+                    {meta.label.replace(' Accounts', '').replace(' Portfolios', '')} ({count})
+                  </Button>
+                );
+              })}
+            </div>
+          </div>
 
-                <div className="dashboard-grid">
-                  {accList.map((acc) => {
-                    const isOwed = Number(acc.balance) < 0;
-                    const isInvestment = acc.accountType === 'INVESTMENT';
+          {filteredAccounts.length === 0 ? (
+            <EmptyState
+              icon="Accounts"
+              title="No Accounts Found"
+              description="No active accounts match the selected category filter."
+            />
+          ) : (
+            <div className="dashboard-grid">
+              {filteredAccounts.map((acc) => {
+                const isOwed = Number(acc.balance) < 0;
+                const isInvestment = acc.accountType === 'INVESTMENT';
+                const meta = TYPE_METADATA[acc.accountType] || { label: acc.accountType, badge: 'neutral', icon: 'Accounts' };
 
-                    return (
-                      <div key={acc.id} className="col-4">
-                        <Card>
-                          <CardHeader>
-                            <div>
-                              <CardTitle>{acc.accountName}</CardTitle>
-                              <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '2px' }}>
-                                Account #{acc.id}
-                              </div>
+                return (
+                  <div key={acc.id} className="col-4">
+                    <Card style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                      <CardHeader>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', minWidth: 0 }}>
+                          <Icon name={meta.icon} size={18} style={{ flexShrink: 0, color: 'var(--accent)' }} />
+                          <div style={{ minWidth: 0 }}>
+                            <CardTitle style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                              {acc.accountName}
+                            </CardTitle>
+                            <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '2px' }}>
+                              Account #{acc.id} {acc.accountNumber ? `· ${acc.accountNumber}` : ''}
                             </div>
-                            <Badge variant={meta.badge}>
-                              {acc.accountType.replace('_', ' ')}
-                            </Badge>
-                          </CardHeader>
+                          </div>
+                        </div>
+                        <Badge variant={meta.badge}>
+                          {acc.accountType.replace('_', ' ')}
+                        </Badge>
+                      </CardHeader>
 
-                          <CardBody>
-                            <div style={{ fontSize: 'var(--font-xs)', color: 'var(--text-muted)', marginBottom: '4px' }}>
-                              Current Balance
-                            </div>
-                            <div
-                              style={{
-                                fontSize: 'var(--font-xl)',
-                                fontWeight: 700,
-                                fontVariantNumeric: 'tabular-nums',
-                                color: isOwed ? 'var(--color-expense)' : 'var(--text-primary)',
+                      <CardBody style={{ flex: 1 }}>
+                        <div style={{ fontSize: 'var(--font-xs)', color: 'var(--text-muted)', marginBottom: '4px' }}>
+                          Current Balance
+                        </div>
+                        <div
+                          style={{
+                            fontSize: 'var(--font-xl)',
+                            fontWeight: 700,
+                            fontVariantNumeric: 'tabular-nums',
+                            color: isOwed ? 'var(--color-expense)' : 'var(--text-primary)',
+                          }}
+                        >
+                          {formatAmount(acc.balance)}
+                        </div>
+                      </CardBody>
+
+                      <CardFooter>
+                        <div style={{ display: 'flex', gap: '4px', width: '100%', justifyContent: 'flex-end', alignItems: 'center' }}>
+                          {isInvestment && (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => {
+                                setInvestmentToAdjust(acc);
+                                setNewValuation(String(acc.balance || ''));
                               }}
+                              style={{ marginRight: 'auto' }}
                             >
-                              {formatAmount(acc.balance)}
-                            </div>
-                          </CardBody>
+                              Update Valuation
+                            </Button>
+                          )}
 
-                          <CardFooter>
-                            <div style={{ display: 'flex', gap: '4px', width: '100%', justifyContent: 'flex-end' }}>
-                              {isInvestment && (
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  onClick={() => {
-                                    setInvestmentToAdjust(acc);
-                                    setNewValuation(String(acc.balance || ''));
-                                  }}
-                                  style={{ marginRight: 'auto' }}
-                                >
-                                  Update Valuation
-                                </Button>
-                              )}
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              setEditCandidate(acc);
+                              setFormData({
+                                accountName: acc.accountName,
+                                accountType: acc.accountType,
+                                openingBalance: '',
+                              });
+                            }}
+                          >
+                            Rename
+                          </Button>
 
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => {
-                                  setEditCandidate(acc);
-                                  setFormData({
-                                    accountName: acc.accountName,
-                                    accountType: acc.accountType,
-                                    openingBalance: '',
-                                  });
-                                }}
-                              >
-                                Rename
-                              </Button>
-
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => setDeleteCandidate(acc)}
-                                style={{ color: 'var(--color-expense)' }}
-                              >
-                                Archive
-                              </Button>
-                            </div>
-                          </CardFooter>
-                        </Card>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            );
-          })}
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setDeleteCandidate(acc)}
+                            style={{ color: 'var(--color-expense)' }}
+                          >
+                            Archive
+                          </Button>
+                        </div>
+                      </CardFooter>
+                    </Card>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       )}
 

@@ -436,10 +436,11 @@
 }
 
 /* --- Data Table --- */
-.table-container {
+.table-container,
+.table-responsive {
   width: 100%;
   overflow-x: auto;
-  border: 1px solid var(--border-subtle);
+  -webkit-overflow-scrolling: touch;
   border-radius: var(--radius-lg);
   background-color: var(--bg-surface);
 }

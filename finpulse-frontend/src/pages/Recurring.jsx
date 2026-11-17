@@ -433,8 +433,8 @@ export function Recurring() {
           </CardHeader>
           <CardBody style={{ padding: 0 }}>
             {/* Desktop / Tablet Table View */}
-            <div className="table-responsive">
-              <table className="data-table">
+            <div className="table-responsive" style={{ overflowX: 'auto', width: '100%' }}>
+              <table className="data-table" style={{ minWidth: '850px' }}>
                 <thead>
                   <tr>
                     <th>Commitment & Merchant</th>
@@ -444,7 +444,7 @@ export function Recurring() {
                     <th style={{ textAlign: 'right' }}>Amount</th>
                     <th>Next Due Date</th>
                     <th>Status</th>
-                    <th style={{ textAlign: 'right' }}>Actions</th>
+                    <th style={{ textAlign: 'right', minWidth: '170px', paddingRight: 'var(--space-5)' }}>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -499,8 +499,8 @@ export function Recurring() {
                         <td>
                           <Badge variant={dueStatus.variant}>{dueStatus.label}</Badge>
                         </td>
-                        <td style={{ textAlign: 'right' }}>
-                          <div style={{ display: 'inline-flex', gap: 'var(--space-2)', alignItems: 'center' }}>
+                        <td style={{ textAlign: 'right', paddingRight: 'var(--space-5)', whiteSpace: 'nowrap' }}>
+                          <div style={{ display: 'inline-flex', gap: 'var(--space-2)', alignItems: 'center', justifyContent: 'flex-end' }}>
                             {item.isActive && (
                               <Button
                                 variant="secondary"
