@@ -4,40 +4,63 @@ FinPulse is an enterprise-grade personal finance and analytical web application 
 
 ---
 
-## Architecture Diagram
+## 👥 Authors & Project Credits
+
+**Done by:**
+- **Karthikeyan S**
+- **Jebaz wesley raj**
+
+---
+
+## 🌐 Live Production Deployments (Multi-Cloud Architecture)
+
+| Component | Platform | Live URL / Endpoint | Status |
+|:---|:---|:---|:---|
+| **Frontend Application** | **Vercel** | [https://finpulse-platform.vercel.app](https://finpulse-platform.vercel.app) *(Primary)*<br/>[https://finpulse-karthik.vercel.app](https://finpulse-karthik.vercel.app) *(Personalized)* | 🟢 Active (HTTP 200) |
+| **Core Microservice** | **Railway** | [https://finpulse-core-service-production.up.railway.app](https://finpulse-core-service-production.up.railway.app) | 🟢 Active (HTTP 200) |
+| **Analytics Microservice** | **Railway** | [https://finpulse-analytics-service-production.up.railway.app](https://finpulse-analytics-service-production.up.railway.app) | 🟢 Active (HTTP 200) |
+| **Cloud Database** | **Railway MySQL 8** | `caboose.proxy.rlwy.net:34081` (`railway` db) | 🟢 Active (Persistent) |
+| **Source Code** | **GitHub** | [https://github.com/Karthikeyan-S7/Finpulse](https://github.com/Karthikeyan-S7/Finpulse) | 🟢 Branch: `main` |
+
+---
+
+## 🏗️ Architecture Diagram
 
 ```mermaid
 graph TD
-    Client["React 18 + Vite (Port 5173)<br/>AppShell • HTML5 Canvas 2D • Intl.NumberFormat"]
-    
-    subgraph Microservices ["FinPulse Microservices Layer"]
-        Core["finpulse-core-service (Port 8081)<br/>3-Tier Architecture • Spring Data JPA • DTO Validation"]
-        Analytics["finpulse-analytics-service (Port 8082)<br/>Pure JDBC • Streaming CSV • Subqueries • SQL Set Operations"]
+    subgraph Frontend ["Frontend Cloud Layer (Vercel)"]
+        Client["React 18 + Vite (finpulse-platform.vercel.app)<br/>HTML5 Canvas 2D • Custom Design System • Intl.NumberFormat"]
     end
     
-    subgraph DataStore ["Relational Persistence Layer"]
-        DB[("MySQL 8.0 / Shared File H2 (finpulse_db)<br/>Users • Accounts • Transactions • Budgets • Recurring • Goals")]
+    subgraph Microservices ["Backend Microservices Layer (Railway)"]
+        Core["finpulse-core-service (Spring Boot 3, Port 8081)<br/>3-Tier Architecture • Spring Data JPA • DTO Validation"]
+        Analytics["finpulse-analytics-service (Spring Boot 3, Port 8082)<br/>Pure JDBC • Streaming CSV • Subqueries • SQL Set Operations"]
+    end
+    
+    subgraph Persistence ["Persistence Layer (Railway MySQL / Local H2)"]
+        DB[("MySQL 8.0 / Embedded H2 (finpulse_db)<br/>Users • Accounts • Transactions • Budgets • Recurring • Goals")]
     end
 
-    Client -->|"REST (JSON)<br/>/api/accounts, /api/transactions"| Core
-    Client -->|"REST (JSON & CSV)<br/>/api/analytics/*"| Analytics
+    Client -->|"HTTPS REST (JSON)<br/>/api/accounts, /api/transactions"| Core
+    Client -->|"HTTPS REST (JSON & CSV)<br/>/api/analytics/*"| Analytics
     Analytics -->|"Inter-Service HTTP REST<br/>(CoreServiceClient)"| Core
-    Core -->|"Spring Data JPA / Hibernate"| DB
+    Core -->|"Spring Data JPA / Hibernate (HikariCP)"| DB
     Analytics -->|"Pure JDBC (Connection, PreparedStatement)"| DB
 ```
 
 ---
 
-## Key Features
+## ✨ Key Features
 
 1. **Information-Dense Fintech Interface:**
    - Calm, trustworthy styling with WCAG AA compliant contrast in both Light (`#F7F8FA`) and Dark (`#0F1318`) themes.
    - Built purely on CSS variables, Flexbox, and a 12-column CSS Grid.
+   - Responsive multi-column account card layout with category filter pills (`All`, `Checking`, `Savings`, `Credit Cards`, `Cash`, `Investment`).
    - Zero third-party UI or icon libraries; includes a dedicated pure inline SVG icon engine.
 2. **Pure HTML5 Canvas 2D Charting Engine:**
-   - 100% custom-built charting suite ([LineAreaChart](file:///C:/Users/karth/OneDrive/Desktop/FSWD/FinPulse/finpulse-frontend/src/components/charts/LineAreaChart.jsx), [BarChart](file:///C:/Users/karth/OneDrive/Desktop/FSWD/FinPulse/finpulse-frontend/src/components/charts/BarChart.jsx), [DonutChart](file:///C:/Users/karth/OneDrive/Desktop/FSWD/FinPulse/finpulse-frontend/src/components/charts/DonutChart.jsx)) operating directly on the Canvas 2D context.
+   - 100% custom-built charting suite (`LineAreaChart`, `BarChart`, `DonutChart`) operating directly on the Canvas 2D context.
    - Dual-layer HiDPI/Retina pixel ratio calibration eliminating blurriness across all display densities.
-   - Hover hit-testing, requestAnimationFrame tweening, DOM tooltips, and screen-reader accessibility fallbacks.
+   - Hover hit-testing, `requestAnimationFrame` tweening, DOM tooltips, and screen-reader accessibility fallbacks.
 3. **Core Financial Ledger & Double-Entry Transfers:**
    - Inter-account fund transfers are executed atomically as paired relational entries (`EXPENSE` and `INCOME`) consolidated into unified ledger records.
    - Real-time balance updates with strict overdraft protection on non-credit accounts (HTTP 409 Conflict guard).
@@ -51,6 +74,7 @@ graph TD
    - One-click limit suggestions calculated from 3-month trailing averages.
    - 1-click "Copy from Last Month" budget duplication (`POST /api/budgets/copy`).
 6. **Recurring Commitments & Savings Goals:**
+   - Responsive scheduled payment management with overflow protection and streamlined action triggers (`Pay`, `Pause/Resume`, `Edit`, `Delete`).
    - Normalized monthly run-rate calculations with automatic schedule advancement upon payment (`POST /api/recurring/{id}/pay`).
    - Savings goals with monthly required deposit pace and milestone completion celebrations.
 7. **Streaming CSV Exporter:**
@@ -58,7 +82,7 @@ graph TD
 
 ---
 
-## Prerequisites
+## 🛠️ Prerequisites
 
 - **Java Development Kit (JDK):** Java 17, 21, or 24 (`java -version`)
 - **Apache Maven:** Version 3.8+ or 3.9+ (`mvn -v`)
@@ -69,7 +93,7 @@ graph TD
 
 ---
 
-## Quick Start
+## 🚀 Local Quick Start
 
 ### 1. One-Click Launch (Default: Shared File H2 Profile)
 No database installation or configuration required. Launches both microservices and the Vite frontend:
@@ -98,32 +122,47 @@ Verifies all 35 REST endpoints across both microservices:
 
 ---
 
-## Environment Variables
+## ⚙️ Environment Variables
 
-| Variable | Default Value | Description |
-|:---|:---|:---|
-| `FINPULSE_DB_URL` | `jdbc:h2:file:.../database/finpulsedb;MODE=MySQL;AUTO_SERVER=TRUE` | JDBC connection string |
-| `FINPULSE_DB_USER` | `sa` (H2) / `root` (MySQL) | Database user |
-| `FINPULSE_DB_PASSWORD` | *(empty)* (H2) / `root123` (MySQL) | Database password |
-| `FINPULSE_CORE_URL` | `http://localhost:8081` | Core service base URL for analytics client |
+### Backend Microservices (`finpulse-core-service` & `finpulse-analytics-service`)
+
+| Variable | Local Default | Cloud Railway Production | Description |
+|:---|:---|:---|:---|
+| `SPRING_PROFILES_ACTIVE` | *(empty / default)* | `mysql` | Spring active profile (`default` for H2, `mysql` for MySQL) |
+| `FINPULSE_DB_URL` | `jdbc:h2:file:...` | `jdbc:mysql://${{MYSQLHOST}}:${{MYSQLPORT}}/${{MYSQLDATABASE}}?useSSL=false...` | Relational JDBC connection string |
+| `FINPULSE_DB_USER` | `sa` (H2) | `${{MYSQLUSER}}` | Database username |
+| `FINPULSE_DB_PASSWORD` | *(empty)* (H2) | `${{MYSQLPASSWORD}}` | Database password |
+| `PORT` | `8081` (Core) / `8082` (Analytics) | `8081` (Core) / `8082` (Analytics) | HTTP port bound by embedded container |
+| `FINPULSE_CORE_URL` | `http://localhost:8081` | `https://finpulse-core-service-production.up.railway.app` | Base URL used by analytics client for inter-service calls |
+
+### Frontend Application (`finpulse-frontend`)
+
+| Variable | Local Default | Cloud Vercel Production | Description |
+|:---|:---|:---|:---|
+| `VITE_CORE_URL` | `http://localhost:8081` | `https://finpulse-core-service-production.up.railway.app` | Core service API URL |
+| `VITE_ANALYTICS_URL` | `http://localhost:8082` | `https://finpulse-analytics-service-production.up.railway.app` | Analytics service API URL |
 
 ---
 
-## Database Seeding & Schema Reset
+## 🗄️ Database Seeding & Schema Reset
 
 The database schema and 6 months of realistic transaction history are defined in:
 - `database/schema.sql`: DDL defining tables, constraints, foreign keys, and indexes.
 - `database/data.sql`: DML containing 6 months of relative transaction records.
 
-To reset the database manually:
-- **H2 Mode:** Delete the `database/finpulsedb.mv.db` file and restart `finpulse-core-service`. The service will automatically recreate tables and seed initial data.
-- **MySQL Mode:** Run `mysql -u root -p < database/schema.sql` followed by `mysql -u root -p finpulse_db < database/data.sql`.
+### Manual Reset Options:
+- **Local H2 Mode:** Delete the `database/finpulsedb.mv.db` file and restart `finpulse-core-service`. The service will automatically recreate tables and seed initial data.
+- **Local MySQL Mode:** Run `mysql -u root -p < database/schema.sql` followed by `mysql -u root -p finpulse_db < database/data.sql`.
+- **Cloud Railway MySQL:** Use the automated seeding script:
+  ```powershell
+  python scripts/seed_cloud_db.py
+  ```
 
 ---
 
-## REST API Reference
+## 📡 REST API Reference
 
-### Core Transactional Service (`http://localhost:8081`)
+### Core Transactional Service (`finpulse-core-service`)
 
 | Method | Endpoint | Description |
 |:---|:---|:---|
@@ -156,24 +195,24 @@ To reset the database manually:
 | `GET` | `/api/categories` | List standardized expenditure categories |
 | `GET` | `/api/summary/overview?userId={id}` | Aggregated overview metrics |
 
-### Analytics Service (`http://localhost:8082`)
+### Analytics Service (`finpulse-analytics-service`)
 
 | Method | Endpoint | Description |
 |:---|:---|:---|
-| `GET` | `/api/analytics/health` | Connectivity check via plain java.sql.Statement |
+| `GET` | `/api/analytics/health` | Connectivity check via plain `java.sql.Statement` |
 | `GET` | `/api/analytics/cashflow?userId={id}&months={n}` | Monthly income, expense, and net variance |
-| `GET` | `/api/analytics/category-breakdown?userId={id}&month={YYYY-MM}` | Category expenditure shares via multi-table JOIN |
+| `GET` | `/api/analytics/category-breakdown?userId={id}&month={YYYY-MM}` | Category expenditure shares via multi-table `JOIN` |
 | `GET` | `/api/analytics/spending-spikes?userId={id}&month={YYYY-MM}` | Correlated subquery identifying >120% spikes |
-| `GET` | `/api/analytics/timeline?userId={id}&days={n}` | Unified SQL UNION timeline (Actual + Scheduled) |
-| `GET` | `/api/analytics/recurring-merchants?userId={id}&month={YYYY-MM}` | SQL INTERSECT recurring merchant audit |
-| `GET` | `/api/analytics/unused-budgets?userId={id}&month={YYYY-MM}` | SQL EXCEPT zero-burn budget health |
+| `GET` | `/api/analytics/timeline?userId={id}&days={n}` | Unified SQL `UNION` timeline (Actual + Scheduled) |
+| `GET` | `/api/analytics/recurring-merchants?userId={id}&month={YYYY-MM}` | SQL `INTERSECT` recurring merchant audit |
+| `GET` | `/api/analytics/unused-budgets?userId={id}&month={YYYY-MM}` | SQL `EXCEPT` zero-burn budget health |
 | `GET` | `/api/analytics/account-balances?userId={id}` | Breakdown of account totals |
 | `GET` | `/api/analytics/overview?userId={id}&month={YYYY-MM}` | Unified analytical summary payload |
 | `GET` | `/api/analytics/export/transactions.csv?userId={id}&from=&to=` | Pure JDBC streaming CSV export with Excel BOM |
 
 ---
 
-## Project Structure
+## 📂 Project Structure
 
 ```
 FinPulse/
@@ -221,6 +260,7 @@ FinPulse/
 │       ├── pages/             # 8 Core Domain Views + NotFound + ErrorBoundary
 │       └── styles/            # tokens.css, base.css, layout.css, components.css
 ├── scripts/
+│   ├── seed_cloud_db.py       # Cloud MySQL database initializer & seeder
 │   ├── smoke-test.ps1         # End-to-end REST API automated test suite
 │   ├── start-all.ps1          # Service launch wrapper
 │   └── stop-all.ps1           # Clean port cleanup script
@@ -230,7 +270,7 @@ FinPulse/
 
 ---
 
-## Running Automated Tests
+## 🧪 Running Automated Tests
 
 ### 1. Core Service Tests (Spring Data JPA & Business Rules)
 ```powershell
@@ -255,9 +295,9 @@ npm run build
 
 ---
 
-## Troubleshooting
+## 🔧 Troubleshooting
 
 - **Port in Use (8081, 8082, or 5173):** Run `.\stop-all.ps1` to terminate lingering processes.
 - **Database Lock on H2:** If H2 reports a file lock, ensure no dangling Java processes are running by executing `.\stop-all.ps1`.
-- **CORS Issues:** Both services permit `http://localhost:5173` and `http://localhost:3000` out of the box via profile configuration.
+- **CORS Issues:** Both services permit `http://localhost:5173`, `http://localhost:3000`, and `https://finpulse-platform.vercel.app` out of the box via profile configuration.
 - **Encoding in Excel:** The CSV export stream includes a UTF-8 Byte Order Mark (BOM) to ensure non-ASCII currency symbols render properly in Microsoft Excel.
