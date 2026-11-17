@@ -453,7 +453,7 @@
 }
 
 .data-table th {
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-3) var(--space-3);
   font-size: var(--font-xs);
   font-weight: var(--weight-semibold);
   color: var(--text-muted);
@@ -477,7 +477,7 @@
 }
 
 .data-table td {
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-3) var(--space-3);
   border-bottom: 1px solid var(--border-subtle);
   color: var(--text-primary);
   vertical-align: middle;
