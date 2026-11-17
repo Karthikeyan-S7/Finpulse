@@ -434,17 +434,17 @@ export function Recurring() {
           <CardBody style={{ padding: 0 }}>
             {/* Desktop / Tablet Table View */}
             <div className="table-responsive" style={{ overflowX: 'auto', width: '100%' }}>
-              <table className="data-table" style={{ minWidth: '850px' }}>
+              <table className="data-table" style={{ width: '100%', minWidth: '820px' }}>
                 <thead>
                   <tr>
                     <th>Commitment & Merchant</th>
                     <th>Category</th>
-                    <th>Payment Account</th>
+                    <th>Account</th>
                     <th>Frequency</th>
                     <th style={{ textAlign: 'right' }}>Amount</th>
-                    <th>Next Due Date</th>
+                    <th>Next Due</th>
                     <th>Status</th>
-                    <th style={{ textAlign: 'right', minWidth: '170px', paddingRight: 'var(--space-5)' }}>Actions</th>
+                    <th style={{ textAlign: 'right', paddingRight: 'var(--space-4)', width: '170px' }}>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -499,8 +499,8 @@ export function Recurring() {
                         <td>
                           <Badge variant={dueStatus.variant}>{dueStatus.label}</Badge>
                         </td>
-                        <td style={{ textAlign: 'right', paddingRight: 'var(--space-5)', whiteSpace: 'nowrap' }}>
-                          <div style={{ display: 'inline-flex', gap: 'var(--space-2)', alignItems: 'center', justifyContent: 'flex-end' }}>
+                        <td style={{ textAlign: 'right', paddingRight: 'var(--space-4)', whiteSpace: 'nowrap' }}>
+                          <div style={{ display: 'inline-flex', gap: '6px', alignItems: 'center', justifyContent: 'flex-end' }}>
                             {item.isActive && (
                               <Button
                                 variant="secondary"
@@ -519,9 +519,9 @@ export function Recurring() {
                               onClick={() => handleToggleActive(item)}
                               disabled={isBusy}
                               title={item.isActive ? 'Pause recurring schedule' : 'Resume recurring schedule'}
+                              style={{ padding: '0 8px' }}
                             >
                               <Icon name={item.isActive ? 'clock' : 'play'} size={14} />
-                              {item.isActive ? 'Pause' : 'Resume'}
                             </Button>
                             <Button
                               variant="ghost"
@@ -529,6 +529,7 @@ export function Recurring() {
                               onClick={() => handleOpenEdit(item)}
                               disabled={isBusy}
                               title="Edit commitment"
+                              style={{ padding: '0 8px' }}
                             >
                               <Icon name="pencil" size={14} />
                             </Button>
@@ -538,7 +539,7 @@ export function Recurring() {
                               onClick={() => setDeleteTarget(item)}
                               disabled={isBusy}
                               title="Delete commitment"
-                              style={{ color: 'var(--color-danger)' }}
+                              style={{ color: 'var(--color-danger)', padding: '0 8px' }}
                             >
                               <Icon name="trash" size={14} />
                             </Button>
