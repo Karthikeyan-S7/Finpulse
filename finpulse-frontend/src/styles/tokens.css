@@ -1,0 +1,180 @@
+/**
+ * FinPulse v2 Design Tokens
+ * Calm, trustworthy, information-dense fintech UI (WCAG AA compliant)
+ */
+
+:root {
+  /* Color Palette - Neutrals (Light Theme Default) */
+  --bg-app: #F7F8FA;
+  --bg-surface: #FFFFFF;
+  --bg-surface-hover: #F3F4F6;
+  --bg-surface-active: #E5E7EB;
+  --border-subtle: #E5E7EB;
+  --border-strong: #D1D5DB;
+  --border-focus: #2457D6;
+  
+  --text-primary: #111827;
+  --text-secondary: #4B5563;
+  --text-muted: #6B7280;
+  --text-inverse: #FFFFFF;
+
+  /* Primary Brand Accent (Deep Blue) */
+  --accent: #2457D6;
+  --accent-hover: #1E46B2;
+  --accent-active: #173790;
+  --accent-subtle: #EFF4FE;
+  --accent-text: #2457D6;
+
+  /* Semantic Status Colors (Light Mode) */
+  --color-income: #059669;
+  --color-income-subtle: #ECFDF5;
+  --color-income-border: #A7F3D0;
+  --color-income-text: #065F46;
+
+  --color-expense: #DC2626;
+  --color-expense-subtle: #FEF2F2;
+  --color-expense-border: #FECACA;
+  --color-expense-text: #991B1B;
+
+  --color-warning: #D97706;
+  --color-warning-subtle: #FFFBEB;
+  --color-warning-border: #FDE68A;
+  --color-warning-text: #92400E;
+
+  --color-info: #2563EB;
+  --color-info-subtle: #EFF6FF;
+  --color-info-border: #BFDBFE;
+  --color-info-text: #1E40AF;
+
+  /* Chart Palette Tokens (8 distinguishable colors) */
+  --chart-1: #2563EB;
+  --chart-2: #10B981;
+  --chart-3: #F59E0B;
+  --chart-4: #8B5CF6;
+  --chart-5: #EC4899;
+  --chart-6: #06B6D4;
+  --chart-7: #F97316;
+  --chart-8: #6366F1;
+
+  /* Typography Scale */
+  --font-xs: 12px;
+  --font-sm: 13px;
+  --font-base: 14px;
+  --font-md: 16px;
+  --font-lg: 20px;
+  --font-xl: 24px;
+  --font-2xl: 30px;
+
+  --weight-normal: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.625;
+
+  /* System Font Stack */
+  --font-family-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-family-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+
+  /* 4px Spacing Scale */
+  --space-0: 0px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* Radii */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 9999px;
+
+  /* Shadows - Minimal and crisp */
+  --shadow-subtle: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-dropdown: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+  --shadow-modal: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.06);
+
+  /* Motion & Transitions */
+  --transition-fast: 120ms ease;
+  --transition-normal: 200ms ease;
+
+  /* Shell Measurements */
+  --sidebar-width: 240px;
+  --sidebar-collapsed-width: 68px;
+  --topbar-height: 56px;
+  --bottombar-height: 56px;
+  --content-max-width: 1280px;
+}
+
+/* Dark Theme Overrides */
+[data-theme="dark"] {
+  --bg-app: #0F1318;
+  --bg-surface: #171C23;
+  --bg-surface-hover: #1E242D;
+  --bg-surface-active: #262D36;
+  --border-subtle: #262D36;
+  --border-strong: #374151;
+  --border-focus: #6C93FF;
+
+  --text-primary: #E6E9EE;
+  --text-secondary: #9AA4B2;
+  --text-muted: #6B7280;
+  --text-inverse: #0F1318;
+
+  --accent: #6C93FF;
+  --accent-hover: #8AB0FF;
+  --accent-active: #B0C8FF;
+  --accent-subtle: #1E293B;
+  --accent-text: #93B3FF;
+
+  --color-income: #34D399;
+  --color-income-subtle: rgba(6, 78, 59, 0.25);
+  --color-income-border: #065F46;
+  --color-income-text: #6EE7B7;
+
+  --color-expense: #F87171;
+  --color-expense-subtle: rgba(127, 29, 29, 0.25);
+  --color-expense-border: #991B1B;
+  --color-expense-text: #FCA5A5;
+
+  --color-warning: #FBBF24;
+  --color-warning-subtle: rgba(120, 53, 15, 0.25);
+  --color-warning-border: #92400E;
+  --color-warning-text: #FDE68A;
+
+  --color-info: #60A5FA;
+  --color-info-subtle: rgba(30, 58, 138, 0.25);
+  --color-info-border: #1E40AF;
+  --color-info-text: #93C5FD;
+
+  --chart-1: #60A5FA;
+  --chart-2: #34D399;
+  --chart-3: #FBBF24;
+  --chart-4: #A78BFA;
+  --chart-5: #F472B6;
+  --chart-6: #22D3EE;
+  --chart-7: #FB923C;
+  --chart-8: #818CF8;
+
+  --shadow-subtle: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+  --shadow-dropdown: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -2px rgba(0, 0, 0, 0.4);
+  --shadow-modal: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+}
+
+/* Reduced Motion Preference Support */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

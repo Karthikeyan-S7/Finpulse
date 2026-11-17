@@ -1,0 +1,32 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: finpulse-core-service
+  datasource:
+    url: ${FINPULSE_DB_URL:jdbc:h2:file:C:/Users/karth/OneDrive/Desktop/FSWD/FinPulse/database/finpulsedb;MODE=MySQL;AUTO_SERVER=TRUE}
+    driverClassName: org.h2.Driver
+    username: ${FINPULSE_DB_USER:sa}
+    password: ${FINPULSE_DB_PASSWORD:}
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    defer-datasource-initialization: true
+  sql:
+    init:
+      mode: always
+      continue-on-error: true
+      schema-locations: classpath:schema.sql
+      data-locations: classpath:data.sql
+
+# CORS Configuration for React Frontend
+finpulse:
+  cors:
+    allowed-origins: "http://localhost:5173,http://localhost:3000"

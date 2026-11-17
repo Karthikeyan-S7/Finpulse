@@ -1,0 +1,28 @@
+# Profile: mysql
+# Active with: java -jar app.jar --spring.profiles.active=mysql
+# Or via: mvn spring-boot:run -Dspring-boot.run.profiles=mysql
+server:
+  port: 8081
+
+spring:
+  datasource:
+    url: ${FINPULSE_DB_URL:jdbc:mysql://localhost:3306/finpulse_db?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true}
+    driverClassName: com.mysql.cj.jdbc.Driver
+    username: ${FINPULSE_DB_USER:root}
+    password: ${FINPULSE_DB_PASSWORD:root123}
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    defer-datasource-initialization: true
+  sql:
+    init:
+      mode: always
+      continue-on-error: true
+      schema-locations: classpath:schema.sql
+      data-locations: classpath:data.sql
+
+finpulse:
+  cors:
+    allowed-origins: "http://localhost:5173,http://localhost:3000"
