@@ -5,7 +5,7 @@ import re
 HOST = "caboose.proxy.rlwy.net"
 PORT = 34081
 USER = "root"
-PASSWORD = "QDSfMgnAjyZwjrBenxEHfVYqtNrtUlzo"
+PASSWORD = ""
 DATABASE = "railway"
 
 print(f"Connecting to MySQL at {HOST}:{PORT}...")
